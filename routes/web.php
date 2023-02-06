@@ -1,9 +1,16 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\todoController;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
+
+Route::get('/', function () {
+    $posts = Http::get('https://jsonplaceholder.typicode.com/posts');
+    $posts = $posts->object();
+    return view('welcome', compact('posts'));
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -21,11 +28,7 @@ use Illuminate\Support\Facades\Http;
 //});
 
 
-Route::get('/', function () {
-  $posts = Http::get('https://jsonplaceholder.typicode.com/posts');
-    $posts = $posts->object();
- return view('welcome', compact('posts'));
-});
+
 
 //passing data on body with retry
 //$response = Http::retry(3, 100, function ($exception) {
@@ -52,6 +55,8 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::resource('home', todoController::class);
 });
+
+Route::get('service', TestController::class );
 
 Route::get('create', function(){
     return view('create-todo');
